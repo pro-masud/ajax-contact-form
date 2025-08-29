@@ -56,6 +56,8 @@ input[type="email"] {
     font-size: 16px;
     outline: none;
     transition: border 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+    display: block;
+    box-sizing: border-box;
 }
 
 input::placeholder {

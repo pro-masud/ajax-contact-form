@@ -38,7 +38,31 @@ class SPI_JAX {
         if(!wp_verify_nonce($_POST['newsletter_nonce_field'], 'newsletter_nonce')){
             wp_send_json_error('Security check failed');
         }else{
-            wp_send_json_success("welcome");
+            // wp_send_json_success("welcome");
+            $email_address = isset($_POST['newsletter_email']) ? sanitize_email($_POST['newsletter_email']) : '';
+
+            // Email Validation
+            if(empty($email_address)){
+                wp_send_json_error('Email address is required');
+            }
+
+            // Validate email format
+            if(!is_email($email_address)){
+                wp_send_json_error('Invalid email address');
+            }
+
+            $ip_address = $this->get_user_id();
+
+            $post_data = [
+                'post_title'   => "Newsletter Subscription: " . wp_strip_all_tags($email_address),
+                'post_content' => "Email: " . $email_address . "\nIP Address: " . $ip_address . "\n Time: " . current_time('mysql'),
+                'post_type'    => 'newsletter',
+                'post_status'  => 'publish',
+            ];
+
+            $post_id = wp_insert_post($post_data);
+
+            wp_send_json_success("Successfully subscribed");
         }
     }
     
@@ -114,12 +138,36 @@ class SPI_JAX {
             'hierarchical'       => false,
             'menu_position'      => 5,
             'menu_icon'          => 'dashicons-email',
-            'supports'           => array( 'title', 'editor', 'thumbnail' ),
+            'supports'           => array( 'title', 'editor' ),
         );
 
         register_post_type( 'newsletter', $args );
     }
 
+    public function get_user_id() {
+        $ip_keys = [
+            'HTTP_CLIENT_IP',
+            'HTTP_X_FORWARDED_FOR',
+            'HTTP_X_FORWARDED',
+            'HTTP_X_CLUSTER_CLIENT_IP',
+            'HTTP_FORWARDED_FOR',
+            'HTTP_FORWARDED',
+            'REMOTE_ADDR'
+        ];
+
+        foreach ($ip_keys as $key) {
+            if (array_key_exists($key, $_SERVER)) {
+                foreach (explode(',', $_SERVER[$key]) as $ip) {
+                    $ip = trim($ip);
+                    if (filter_var($ip, FILTER_VALIDATE_IP, FILTER_FLAG_NO_PRIV_RANGE | FILTER_FLAG_NO_RES_RANGE)) {
+                        return $ip;
+                    }
+                }
+            }
+        }
+
+        return isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'UNKNOWN';
+    }
 }
 
 new SPI_JAX();
