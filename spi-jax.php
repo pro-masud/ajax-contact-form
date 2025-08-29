@@ -66,32 +66,32 @@ class SPI_JAX {
         }
     }
     
-    public function newsletter_shortcode_cb($attrs, $content=null){
-        $attributes = shortcode_atts([
-            'newsletter-title' => 'Subscribe for Updates'
-        ], $attrs);
+    // public function newsletter_shortcode_cb($attrs, $content=null){
+    //     $attributes = shortcode_atts([
+    //         'newsletter-title' => 'Subscribe for Updates'
+    //     ], $attrs);
 
-        ob_start();
-        ?>  
-        <div class="card" role="main" aria-labelledby="title">
-            <h1 id="title"><?php echo esc_html($attributes['newsletter-title']); ?></h1>
-            <span id="news-message"></span>
-            <form action="#" method="post" id="newsletter-form">
-                <div class="field">
-                    <label for="email">Email Address</label>
-                    <input id="newsletter-email" name="newsletter_email" require type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" required aria-describedby="help" />
-                </div>
-                <div class="actions">
-                    <button type="submit">Subscribe</button>
-                </div>
-                <p id="help" class="note">We only use your email for the newsletter.</p>
-            </form>
-        </div>
-        <?php
-        $newsletter_form = ob_get_clean();
+    //     ob_start();
+    //     ?>  
+    //     <div class="card" role="main" aria-labelledby="title">
+    //         <h1 id="title"><?php echo esc_html($attributes['newsletter-title']); ?></h1>
+    //         <span id="news-message"></span>
+    //         <form action="#" method="post" id="newsletter-form">
+    //             <div class="field">
+    //                 <label for="email">Email Address</label>
+    //                 <input id="newsletter-email" name="newsletter_email" require type="email" inputmode="email" autocomplete="email" placeholder="name@example.com" required aria-describedby="help" />
+    //             </div>
+    //             <div class="actions">
+    //                 <button type="submit">Subscribe</button>
+    //             </div>
+    //             <p id="help" class="note">We only use your email for the newsletter.</p>
+    //         </form>
+    //     </div>
+    //     <?php
+    //     $newsletter_form = ob_get_clean();
 
-        return $newsletter_form;
-    }
+    //     return $newsletter_form;
+    // }
 
     public function plugin_assets_css_js(){
         // Enqueue CSS
